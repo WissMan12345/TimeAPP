@@ -6,13 +6,13 @@
         <link rel="icon" type="image/svg+xml" href="/vite.svg" />
         <link
             rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>TimeBOT</title>
         <style>
             body {
-                font-family: 'Indie Flower', cursive;
+                font-family: 'Roboto', sans-serif;
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -22,6 +22,8 @@
                 background: url('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fHN0YXJ8ZW58MHx8fHwxNjg4ODQ4MjU3&ixlib=rb-1.2.1&q=80&w=1080') no-repeat center center fixed;
                 background-size: cover;
                 color: #ffffff;
+                flex-direction: column;
+                position: relative;
             }
             #message {
                 text-align: center;
@@ -30,6 +32,9 @@
                 border-radius: 15px;
                 box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
                 animation: textGlow 2s infinite alternate;
+                font-size: 2rem;
+                font-weight: bold;
+                margin-top: 2rem;
             }
             @keyframes textGlow {
                 from {
@@ -40,18 +45,27 @@
                 }
             }
             #clock {
-                position: absolute;
-                top: 10%;
-                left: 5%;
                 width: 100px;
                 height: 100px;
                 background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Clock-icon-blue.svg/1024px-Clock-icon-blue.svg.png') no-repeat center center;
                 background-size: contain;
                 animation: tickTock 1s infinite steps(60);
+                position: absolute;
+                top: 10%;
+                left: 5%;
+                z-index: 1; /* Чтобы часы были выше текста */
             }
             @keyframes tickTock {
                 0% { transform: rotate(0deg); }
                 100% { transform: rotate(360deg); }
+            }
+            #heart {
+                position: absolute;
+                bottom: 10px;
+                width: 100px;
+                height: 90px;
+                background: url('https://upload.wikimedia.org/wikipedia/commons/5/57/Pixel_heart.png') no-repeat center center;
+                background-size: contain;
             }
         </style>
     </head>
@@ -61,6 +75,7 @@
             <p>Наше приложение еще в разработке, будет готово принять тебя немного позже!</p>
         </div>
         <div id="clock"></div>
+        <div id="heart"></div>
         <div id="root"></div>
         <script type="module" src="/src/main.tsx"></script>
     </body>
