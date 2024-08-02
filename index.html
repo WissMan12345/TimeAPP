@@ -17,26 +17,44 @@
                 justify-content: center;
                 align-items: center;
                 height: 100vh;
-                background-color: #f0f8ff;
                 margin: 0;
+                overflow: hidden;
+                background: url('https://images.unsplash.com/photo-1476041800959-2f2d95a0f313?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDl8fGNvc21vc3xlbnwwfHx8fDE2ODg3Njk0NTM&ixlib=rb-1.2.1&q=80&w=1080') no-repeat center center fixed;
+                background-size: cover;
+                color: #ffffff;
             }
             #message {
                 text-align: center;
-                background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+                background-color: rgba(0, 0, 0, 0.7);
                 padding: 2rem;
                 border-radius: 15px;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                color: #ffffff;
-                animation: fadeIn 2s ease-in-out;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+                animation: textGlow 2s infinite alternate;
             }
-            @keyframes fadeIn {
+            @keyframes textGlow {
                 from {
-                    opacity: 0;
-                    transform: scale(0.9);
+                    text-shadow: 0 0 10px #ffffff, 0 0 20px #ffffff, 0 0 30px #ff0080, 0 0 40px #ff0080, 0 0 50px #ff0080, 0 0 60px #ff0080, 0 0 70px #ff0080;
                 }
                 to {
-                    opacity: 1;
-                    transform: scale(1);
+                    text-shadow: 0 0 20px #ffffff, 0 0 30px #ff0080, 0 0 40px #ff0080, 0 0 50px #ff0080, 0 0 60px #ff0080, 0 0 70px #ff0080, 0 0 80px #ff0080;
+                }
+            }
+            #clock {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 50px;
+                height: 50px;
+                background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Clock-icon-blue.svg/1024px-Clock-icon-blue.svg.png') no-repeat center center;
+                background-size: contain;
+                animation: floatClock 10s infinite linear;
+            }
+            @keyframes floatClock {
+                0% {
+                    transform: translate(-50%, -50%) rotate(0deg);
+                }
+                100% {
+                    transform: translate(-50%, -50%) rotate(360deg);
                 }
             }
         </style>
@@ -46,6 +64,7 @@
             <p>Привет друг!</p>
             <p>Наше приложение еще в разработке, будет готово принять тебя немного позже!</p>
         </div>
+        <div id="clock"></div>
         <div id="root"></div>
         <script type="module" src="/src/main.tsx"></script>
     </body>
