@@ -25,6 +25,7 @@
             margin: 10px 0;
             color: #ff4081;
             position: relative;
+            z-index: 2;
         }
         #title::before {
             content: '';
@@ -71,6 +72,7 @@
             position: absolute;
             animation: clockFall 10s linear infinite;
             transform-origin: center;
+            z-index: 1;
         }
         .clock::before {
             content: "";
@@ -93,7 +95,7 @@
             height: 10px;
             background-color: white;
             transform-origin: bottom center;
-            animation: rotateHand 10s linear infinite; /* Медленное вращение */
+            animation: rotateHand 7s linear infinite; /* Ускоренное вращение */
             transform: translate(-50%, -100%);
         }
         @keyframes rotateHand {
