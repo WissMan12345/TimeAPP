@@ -75,11 +75,7 @@
             background-color: transparent;
             position: absolute;
             animation: clockFall 10s linear infinite;
-            transform-origin: center; /* Центральное вращение */
-            left: 50%; /* Центральное положение */
-            top: 50%; /* Центральное положение */
-            margin-left: -25px; /* Половина ширины */
-            margin-top: -25px; /* Половина высоты */
+            transform-origin: center;
         }
         .clock::before {
             content: "";
@@ -96,14 +92,14 @@
         .clock::after {
             content: "";
             position: absolute;
-            top: 0%;
+            top: 50%;
             left: 50%;
             width: 2px;
-            height: 20px;
+            height: 10px; /* Уменьшена длина стрелки */
             background-color: white;
-            transform-origin: bottom center; /* Центральное вращение стрелки */
+            transform-origin: bottom center;
             animation: rotateHand 1s linear infinite;
-            transform: translateX(-50%) rotate(0deg);
+            transform: translate(-50%, -100%); /* Центральное положение */
         }
         .mark {
             position: absolute;
@@ -148,6 +144,7 @@
                     clock.appendChild(mark);
                 }
 
+                clock.style.left = `${Math.random() * 100}%`;
                 clock.style.animationDuration = `${Math.random() * 5 + 5}s`;
                 document.body.appendChild(clock);
             }, i * 500); // Часы будут появляться с задержкой
