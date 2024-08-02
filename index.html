@@ -10,8 +10,42 @@
         />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>TimeBOT</title>
+        <style>
+            body {
+                font-family: 'Poppins', sans-serif;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                background-color: #f0f8ff;
+                margin: 0;
+            }
+            #message {
+                text-align: center;
+                background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+                padding: 2rem;
+                border-radius: 15px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                color: #ffffff;
+                animation: fadeIn 2s ease-in-out;
+            }
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: scale(0.9);
+                }
+                to {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+            }
+        </style>
     </head>
-    <body style="height: 100vh; overflow: hidden">
+    <body>
+        <div id="message">
+            <p>Привет друг!</p>
+            <p>Наше приложение еще в разработке, будет готово принять тебя немного позже!</p>
+        </div>
         <div id="root"></div>
         <script type="module" src="/src/main.tsx"></script>
     </body>
