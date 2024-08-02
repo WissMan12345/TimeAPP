@@ -10,7 +10,7 @@
             font-family: 'Poppins', sans-serif;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start; /* Подняли вверх */
             align-items: center;
             height: 100vh;
             margin: 0;
@@ -22,13 +22,14 @@
         #title {
             font-size: 4rem;
             font-weight: 700;
-            margin-bottom: 20px;
+            margin: 20px 0; /* Подняли повыше */
             color: #ff4081; /* Розовый цвет для названия */
         }
         #message {
             text-align: center;
             font-size: 2rem;
             font-weight: 500;
+            margin: 20px 0; /* Подняли повыше */
             z-index: 2;
         }
         @keyframes clockFall {
@@ -39,19 +40,38 @@
                 transform: translateY(100vh) rotate(360deg);
             }
         }
+        @keyframes rotateHand {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
         .clock {
             width: 50px;
             height: 50px;
-            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Clock-icon-blue.svg/1024px-Clock-icon-blue.svg.png') no-repeat center center;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Simple_clock.svg/1024px-Simple_clock.svg.png') no-repeat center center;
             background-size: contain;
             position: absolute;
             animation: clockFall 10s linear infinite;
         }
+        .clock::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 50%;
+            height: 2px;
+            background-color: white;
+            transform-origin: left;
+            animation: rotateHand 1s linear infinite;
+        }
         #heart {
             position: absolute;
             bottom: 10px;
-            width: 100px;
-            height: 90px;
+            width: 110px;
+            height: 100px;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
@@ -78,26 +98,29 @@
     <script>
         // Генерация множества часов
         for (let i = 0; i < 20; i++) {
-            const clock = document.createElement('div');
-            clock.className = 'clock';
-            clock.style.left = `${Math.random() * 100}%`;
-            clock.style.animationDuration = `${Math.random() * 5 + 5}s`;
-            document.body.appendChild(clock);
+            setTimeout(() => {
+                const clock = document.createElement('div');
+                clock.className = 'clock';
+                clock.style.left = `${Math.random() * 100}%`;
+                clock.style.animationDuration = `${Math.random() * 5 + 5}s`;
+                document.body.appendChild(clock);
+            }, i * 500); // Часы будут появляться с задержкой
         }
 
         // Создание пиксельного сердца
         const heartPattern = [
-            [0, 0, 1, 1, 0, 0, 1, 1, 0, 0],
-            [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-            [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
-            [0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
-            [0, 0, 0, 0, 1, 1, 0, 0, 0, 0] // Нижняя часть сердца
+            [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
+            [0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+            [0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+            [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+            [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+            [0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+            [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
+            [0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0]
         ];
-        
+
         const heartContainer = document.getElementById('heart');
         heartPattern.forEach(row => {
             row.forEach(pixel => {
