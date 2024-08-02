@@ -14,5 +14,15 @@
     <body style="height: 100vh; overflow: hidden">
         <div id="root"></div>
         <script type="module" src="/src/main.tsx"></script>
+        <script>
+        // Access the Telegram WebApp API and initData
+        const initData = window.Telegram.WebApp.initDataUnsafe;
+
+        // Example of using the initData
+        const user = JSON.parse(initData).user;
+        if (user) {
+            console.log(Hello, ${user.first_name}!);
+        }
+    </script>
     </body>
 </html>
