@@ -9,6 +9,7 @@
         body {
             font-family: 'Poppins', sans-serif;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -18,6 +19,12 @@
             overflow: hidden;
             position: relative;
         }
+        #title {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #ff4081; /* Розовый цвет для названия */
+        }
         #message {
             text-align: center;
             font-size: 2rem;
@@ -26,14 +33,10 @@
         }
         @keyframes clockFall {
             0% {
-                transform: translate(-50%, -50%) rotate(0deg);
-                top: -10%;
-                left: 110%;
+                transform: translateY(-100vh) rotate(0deg);
             }
             100% {
-                transform: translate(-50%, -50%) rotate(360deg);
-                top: 110%;
-                left: -10%;
+                transform: translateY(100vh) rotate(360deg);
             }
         }
         .clock {
@@ -43,7 +46,6 @@
             background-size: contain;
             position: absolute;
             animation: clockFall 10s linear infinite;
-            z-index: 1;
         }
         #heart {
             position: absolute;
@@ -67,6 +69,7 @@
     </style>
 </head>
 <body>
+    <div id="title">TIME</div>
     <div id="message">
         <p>Привет друг!</p>
         <p>Наше приложение еще в разработке, будет готово принять тебя немного позже!</p>
@@ -77,8 +80,8 @@
         for (let i = 0; i < 20; i++) {
             const clock = document.createElement('div');
             clock.className = 'clock';
-            clock.style.animationDuration = `${Math.random() * 5 + 5}s`;
             clock.style.left = `${Math.random() * 100}%`;
+            clock.style.animationDuration = `${Math.random() * 5 + 5}s`;
             document.body.appendChild(clock);
         }
 
@@ -88,10 +91,11 @@
             [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
             [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
             [0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
             [0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
-            [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 1, 0, 0, 0, 0] // Нижняя часть сердца
         ];
         
         const heartContainer = document.getElementById('heart');
