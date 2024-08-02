@@ -10,7 +10,7 @@
             font-family: 'Poppins', sans-serif;
             display: flex;
             flex-direction: column;
-            justify-content: center; /* Центральное выравнивание текста */
+            justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
@@ -22,14 +22,14 @@
         #title {
             font-size: 4rem;
             font-weight: 700;
-            margin: 20px 0; /* Подняли повыше */
-            color: #ff4081; /* Розовый цвет для названия */
+            margin: 10px 0; /* Подняли чуть выше */
+            color: #ff4081;
         }
         #message {
             text-align: center;
             font-size: 2rem;
             font-weight: 500;
-            margin: 20px 0; /* Центральное выравнивание */
+            margin: 10px 0; /* Подняли чуть выше */
             z-index: 2;
         }
         @keyframes clockFall {
@@ -75,14 +75,29 @@
             width: 2px;
             height: 10px;
             background-color: white;
-            transform-origin: bottom;
+            transform-origin: bottom center; /* Центральное вращение стрелки */
             animation: rotateHand 1s linear infinite;
+            transform: translate(-50%, -50%) rotate(0deg);
         }
+        .mark {
+            position: absolute;
+            background-color: white;
+            width: 2px;
+            height: 6px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .mark-0 { transform: translate(-50%, -50%) translateY(-9px); }
+        .mark-3 { transform: translate(-50%, -50%) translateX(9px) rotate(90deg); }
+        .mark-6 { transform: translate(-50%, -50%) translateY(9px); }
+        .mark-9 { transform: translate(-50%, -50%) translateX(-9px) rotate(90deg); }
         #heart {
             position: absolute;
             bottom: 10px;
             font-size: 5rem;
             z-index: 2;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* Светящийся эффект */
         }
     </style>
 </head>
@@ -99,6 +114,14 @@
             setTimeout(() => {
                 const clock = document.createElement('div');
                 clock.className = 'clock';
+
+                // Добавление черточек на часах
+                for (let j = 0; j < 4; j++) {
+                    const mark = document.createElement('div');
+                    mark.className = `mark mark-${j * 3}`;
+                    clock.appendChild(mark);
+                }
+
                 clock.style.left = `${Math.random() * 100}%`;
                 clock.style.animationDuration = `${Math.random() * 5 + 5}s`;
                 document.body.appendChild(clock);
