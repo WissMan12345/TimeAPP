@@ -10,7 +10,7 @@
             font-family: 'Poppins', sans-serif;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start; /* Подняли вверх */
+            justify-content: center; /* Центральное выравнивание текста */
             align-items: center;
             height: 100vh;
             margin: 0;
@@ -29,7 +29,7 @@
             text-align: center;
             font-size: 2rem;
             font-weight: 500;
-            margin: 20px 0; /* Подняли повыше */
+            margin: 20px 0; /* Центральное выравнивание */
             z-index: 2;
         }
         @keyframes clockFall {
@@ -51,8 +51,7 @@
         .clock {
             width: 50px;
             height: 50px;
-            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Simple_clock.svg/1024px-Simple_clock.svg.png') no-repeat center center;
-            background-size: contain;
+            background-color: transparent;
             position: absolute;
             animation: clockFall 10s linear infinite;
         }
@@ -61,30 +60,29 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 50%;
-            height: 2px;
+            width: 20px;
+            height: 20px;
+            border: 2px solid white;
+            border-radius: 50%;
+            background: transparent;
+            transform: translate(-50%, -50%);
+        }
+        .clock::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 2px;
+            height: 10px;
             background-color: white;
-            transform-origin: left;
+            transform-origin: bottom;
             animation: rotateHand 1s linear infinite;
         }
         #heart {
             position: absolute;
             bottom: 10px;
-            width: 110px;
-            height: 100px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+            font-size: 5rem;
             z-index: 2;
-        }
-        .pixel {
-            width: 10px;
-            height: 10px;
-            background-color: red;
-            margin: 1px;
-        }
-        .hidden {
-            visibility: hidden;
         }
     </style>
 </head>
@@ -94,7 +92,7 @@
         <p>Привет друг!</p>
         <p>Наше приложение еще в разработке, будет готово принять тебя немного позже!</p>
     </div>
-    <div id="heart"></div>
+    <div id="heart">😍</div>
     <script>
         // Генерация множества часов
         for (let i = 0; i < 20; i++) {
@@ -106,29 +104,6 @@
                 document.body.appendChild(clock);
             }, i * 500); // Часы будут появляться с задержкой
         }
-
-        // Создание пиксельного сердца
-        const heartPattern = [
-            [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
-            [0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0],
-            [0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
-            [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-            [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-            [0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0],
-            [0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
-            [0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0]
-        ];
-
-        const heartContainer = document.getElementById('heart');
-        heartPattern.forEach(row => {
-            row.forEach(pixel => {
-                const pixelDiv = document.createElement('div');
-                pixelDiv.className = `pixel ${pixel ? '' : 'hidden'}`;
-                heartContainer.appendChild(pixelDiv);
-            });
-        });
     </script>
 </body>
 </html>
