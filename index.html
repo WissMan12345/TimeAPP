@@ -24,23 +24,26 @@
             font-weight: 700;
             margin: 10px 0; /* Подняли чуть выше */
             color: #ff4081;
-            position: relative; /* Для добавления свечения */
+            position: relative;
         }
-        #title::after {
+        #title::before {
             content: '';
             position: absolute;
+            top: 50%;
+            left: 50%;
             width: 100%;
             height: 100%;
-            border: 2px solid #ff4081;
             border-radius: 50%;
-            animation: glow 3s ease-in-out infinite; /* Анимация свечения */
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px 5px rgba(255, 64, 129, 0.5);
+            animation: glow 3s ease-in-out infinite;
         }
         @keyframes glow {
             0%, 100% {
-                box-shadow: 0 0 10px 5px rgba(255, 64, 129, 0.5); /* Легкое розовое свечение */
+                box-shadow: 0 0 10px 5px rgba(255, 64, 129, 0.5);
             }
             50% {
-                box-shadow: 0 0 20px 10px rgba(255, 64, 129, 0.7); /* Усиление свечения на половине анимации */
+                box-shadow: 0 0 20px 10px rgba(255, 64, 129, 0.7);
             }
         }
         #message {
@@ -72,7 +75,7 @@
             background-color: transparent;
             position: absolute;
             animation: clockFall 10s linear infinite;
-            transform-origin: center; /* Центральное вращение */
+            transform-origin: center;
         }
         .clock::before {
             content: "";
@@ -92,11 +95,11 @@
             top: 50%;
             left: 50%;
             width: 2px;
-            height: 10px;
+            height: 20px; /* Увеличено для фиксации центра */
             background-color: white;
             transform-origin: bottom center; /* Центральное вращение стрелки */
             animation: rotateHand 1s linear infinite;
-            transform: translate(-50%, -50%) rotate(0deg);
+            transform: translate(-50%, -100%); /* Смещено для фиксации центра */
         }
         .mark {
             position: absolute;
