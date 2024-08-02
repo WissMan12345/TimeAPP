@@ -6,20 +6,20 @@
         <link rel="icon" type="image/svg+xml" href="/vite.svg" />
         <link
             rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>TimeBOT</title>
         <style>
             body {
-                font-family: 'Poppins', sans-serif;
+                font-family: 'Indie Flower', cursive;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 height: 100vh;
                 margin: 0;
                 overflow: hidden;
-                background: url('https://images.unsplash.com/photo-1476041800959-2f2d95a0f313?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDl8fGNvc21vc3xlbnwwfHx8fDE2ODg3Njk0NTM&ixlib=rb-1.2.1&q=80&w=1080') no-repeat center center fixed;
+                background: url('https://images.unsplash.com/photo-1506748686214-e9df14d4d9d5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDl8fHN0YXJzfGVufDB8fHx8fDE2ODg3NzAwNzY&ixlib=rb-1.2.1&q=80&w=1080') no-repeat center center fixed;
                 background-size: cover;
                 color: #ffffff;
             }
@@ -41,20 +41,20 @@
             }
             #clock {
                 position: absolute;
-                top: 50%;
-                left: 50%;
-                width: 50px;
-                height: 50px;
+                top: 10%;
+                left: 5%;
+                width: 100px;
+                height: 100px;
                 background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Clock-icon-blue.svg/1024px-Clock-icon-blue.svg.png') no-repeat center center;
                 background-size: contain;
                 animation: floatClock 10s infinite linear;
             }
             @keyframes floatClock {
                 0% {
-                    transform: translate(-50%, -50%) rotate(0deg);
+                    transform: translate(0, 0) rotate(0deg);
                 }
                 100% {
-                    transform: translate(-50%, -50%) rotate(360deg);
+                    transform: translate(0, 50px) rotate(360deg);
                 }
             }
         </style>
