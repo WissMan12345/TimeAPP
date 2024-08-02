@@ -22,7 +22,7 @@
         #title {
             font-size: 4rem;
             font-weight: 700;
-            margin: 10px 0; /* Подняли чуть выше */
+            margin: 10px 0;
             color: #ff4081;
             position: relative;
         }
@@ -50,7 +50,7 @@
             text-align: center;
             font-size: 2rem;
             font-weight: 500;
-            margin: 10px 0; /* Подняли чуть выше */
+            margin: 10px 0;
             z-index: 2;
         }
         @keyframes clockFall {
@@ -59,14 +59,6 @@
             }
             100% {
                 transform: translateY(100vh) rotate(360deg);
-            }
-        }
-        @keyframes rotateHand {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
             }
         }
         .clock {
@@ -95,11 +87,10 @@
             top: 50%;
             left: 50%;
             width: 2px;
-            height: 10px; /* Уменьшена длина стрелки */
+            height: 10px;
             background-color: white;
             transform-origin: bottom center;
-            animation: rotateHand 1s linear infinite;
-            transform: translate(-50%, -100%); /* Центральное положение */
+            transform: translate(-50%, -100%) rotate(45deg); /* Стрелка зафиксирована между 0 и 3 */
         }
         .mark {
             position: absolute;
@@ -119,7 +110,7 @@
             bottom: 10px;
             font-size: 5rem;
             z-index: 2;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* Светящийся эффект */
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
     </style>
 </head>
@@ -147,7 +138,7 @@
                 clock.style.left = `${Math.random() * 100}%`;
                 clock.style.animationDuration = `${Math.random() * 5 + 5}s`;
                 document.body.appendChild(clock);
-            }, i * 500); // Часы будут появляться с задержкой
+            }, i * 500);
         }
     </script>
 </body>
