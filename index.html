@@ -53,6 +53,9 @@
             margin: 10px 0;
             z-index: 2;
         }
+        #message p:first-child {
+            font-weight: bold;
+        }
         @keyframes clockFall {
             0% {
                 transform: translateY(-100vh) rotate(0deg);
@@ -131,6 +134,10 @@
     </div>
     <div id="heart">😍</div>
     <script>
+        function getRandomRotation() {
+            return Math.floor(Math.random() * 360); // Получаем случайный угол от 0 до 359 градусов
+        }
+
         // Генерация множества часов
         for (let i = 0; i < 20; i++) {
             setTimeout(() => {
@@ -143,6 +150,10 @@
                     mark.className = `mark mark-${j * 3}`;
                     clock.appendChild(mark);
                 }
+
+                // Получаем случайный угол для начальной позиции стрелки
+                const randomRotation = getRandomRotation();
+                clock.style.transform = `rotate(${randomRotation}deg)`;
 
                 clock.style.left = `${Math.random() * 100}%`;
                 clock.style.animationDuration = `${Math.random() * 5 + 5}s`;
