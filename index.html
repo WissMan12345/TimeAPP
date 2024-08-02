@@ -1,81 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <script src="https://telegram.org/js/telegram-web-app.js"></script>
-        <meta charset="UTF-8" />
-        <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-        <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap"
-        />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>TimeBOT</title>
-        <style>
-            body {
-                font-family: 'Roboto', sans-serif;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100vh;
-                margin: 0;
-                overflow: hidden;
-                background: url('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fHN0YXJ8ZW58MHx8fHwxNjg4ODQ4MjU3&ixlib=rb-1.2.1&q=80&w=1080') no-repeat center center fixed;
-                background-size: cover;
-                color: #ffffff;
-                flex-direction: column;
-                position: relative;
+<head>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TimeBOT</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            background: url('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fHN0YXJ8ZW58MHx8fHwxNjg4ODQ4MjU3&ixlib=rb-1.2.1&q=80&w=1080') no-repeat center center fixed;
+            background-size: cover;
+            color: #ffffff;
+            flex-direction: column;
+            position: relative;
+        }
+        #message {
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            animation: textGlow 2s infinite alternate;
+            font-size: 2rem;
+            font-weight: 500;
+            margin-top: 4rem; /* Дистанция от верхней части экрана */
+            color: #ff0080; /* Цвет текста */
+        }
+        @keyframes textGlow {
+            from {
+                text-shadow: 0 0 10px #ffffff, 0 0 20px #ffffff, 0 0 30px #ff0080, 0 0 40px #ff0080, 0 0 50px #ff0080, 0 0 60px #ff0080, 0 0 70px #ff0080;
             }
-            #message {
-                text-align: center;
-                background-color: rgba(0, 0, 0, 0.7);
-                padding: 2rem;
-                border-radius: 15px;
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-                animation: textGlow 2s infinite alternate;
-                font-size: 2rem;
-                font-weight: 500;
-                margin-top: 4rem; /* Дистанция от верхней части экрана */
+            to {
+                text-shadow: 0 0 10px #ffffff, 0 0 15px #ffffff, 0 0 20px #ff0080, 0 0 25px #ff0080, 0 0 30px #ff0080, 0 0 35px #ff0080, 0 0 40px #ff0080;
             }
-            @keyframes textGlow {
-                from {
-                    text-shadow: 0 0 10px #ffffff, 0 0 20px #ffffff, 0 0 30px #ff0080, 0 0 40px #ff0080, 0 0 50px #ff0080, 0 0 60px #ff0080, 0 0 70px #ff0080;
-                }
-                to {
-                    text-shadow: 0 0 20px #ffffff, 0 0 30px #ff0080, 0 0 40px #ff0080, 0 0 50px #ff0080, 0 0 60px #ff0080, 0 0 70px #ff0080, 0 0 80px #ff0080;
-                }
-            }
-            #clock {
-                width: 100px;
-                height: 100px;
-                background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Clock-icon-blue.svg/1024px-Clock-icon-blue.svg.png') no-repeat center center;
-                background-size: contain;
-                animation: tickTock 1s infinite steps(60);
-                position: absolute;
-                top: 5%;
-                z-index: 1; /* Чтобы часы были выше текста */
-            }
-            @keyframes tickTock {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-            }
-            #heart {
-                position: absolute;
-                bottom: 10px;
-                width: 100px;
-                height: 90px;
-                background: url('https://upload.wikimedia.org/wikipedia/commons/5/57/Pixel_heart.png') no-repeat center center;
-                background-size: contain;
-            }
-        </style>
-    </head>
-    <body>
-        <div id="clock"></div>
-        <div id="message">
-            <p>Привет друг!</p>
-            <p>Наше приложение еще в разработке, будет готово принять тебя немного позже!</p>
-        </div>
-        <div id="heart"></div>
-        <div id="root"></div>
-        <script type="module" src="/src/main.tsx"></script>
-    </body>
+        }
+        #clock {
+            width: 100px;
+            height: 100px;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Clock-icon-blue.svg/1024px-Clock-icon-blue.svg.png') no-repeat center center;
+            background-size: contain;
+            animation: tickTock 1s infinite steps(60);
+            position: absolute;
+            top: 5%;
+            left: 5%;
+            z-index: 1; /* Чтобы часы были выше текста */
+        }
+        @keyframes tickTock {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #heart {
+            position: absolute;
+            bottom: 10px;
+            right: 10px; /* Правильное позиционирование сердца */
+            width: 100px;
+            height: 90px;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/5/57/Pixel_heart.png') no-repeat center center;
+            background-size: contain;
+            z-index: 1; /* Чтобы сердце было выше текста */
+        }
+    </style>
+</head>
+<body>
+    <div id="clock"></div>
+    <div id="message">
+        <p>Привет друг!</p>
+        <p>Наше приложение еще в разработке, будет готово принять тебя немного позже!</p>
+    </div>
+    <div id="heart"></div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+</body>
 </html>
