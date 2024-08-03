@@ -70,10 +70,35 @@
         #startButton:hover {
             background-color: #f50057;
         }
+        #timeSection {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+        }
+        #timeSection #title {
+            margin-top: 20vh;
+        }
         #tokenBalance {
             margin-top: 20px;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             z-index: 2;
+        }
+        #playButton {
+            background-color: #ff4081;
+            color: white;
+            font-size: 1.5rem;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+            z-index: 2;
+        }
+        #playButton:hover {
+            background-color: #f50057;
         }
         .clock {
             width: 50px;
@@ -144,10 +169,11 @@
         <p>Привет друг!</p>
         <p id="appStatus">В разработке V. 0.0.1</p>
     </div>
-    <button id="startButton" onclick="showTimeSection()">Начать</button>
-    <div id="timeSection" style="display: none;">
+    <button id="startButton" onclick="startGame()">Начать</button>
+    <div id="timeSection">
         <div id="title">TIME</div>
-        <div id="tokenBalance">Баланс токенов: <span id="balance">0</span></div>
+        <div id="tokenBalance">Баланс токенов Time: <span id="balance">0</span></div>
+        <button id="playButton" onclick="playGame()">Играть</button>
     </div>
     <div id="heart">😍</div>
     <script>
@@ -155,31 +181,41 @@
             return Math.floor(Math.random() * 360); // Получаем случайный угол от 0 до 359 градусов
         }
 
-        function showTimeSection() {
+        function startGame() {
+            document.getElementById('startButton').style.display = 'none';
+            document.getElementById('message').style.display = 'none';
             document.getElementById('timeSection').style.display = 'block';
+            generateClocks();
         }
 
-        // Генерация множества часов
-        for (let i = 0; i < 20; i++) {
-            setTimeout(() => {
-                const clock = document.createElement('div');
-                clock.className = 'clock';
+        function generateClocks() {
+            // Генерация множества часов
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const clock = document.createElement('div');
+                    clock.className = 'clock';
 
-                // Добавление черточек на часах
-                for (let j = 0; j < 4; j++) {
-                    const mark = document.createElement('div');
-                    mark.className = `mark mark-${j * 3}`;
-                    clock.appendChild(mark);
-                }
+                    // Добавление черточек на часах
+                    for (let j = 0; j < 4; j++) {
+                        const mark = document.createElement('div');
+                        mark.className = `mark mark-${j * 3}`;
+                        clock.appendChild(mark);
+                    }
 
-                // Получаем случайный угол для начальной позиции стрелки
-                const randomRotation = getRandomRotation();
-                clock.style.transform = `rotate(${randomRotation}deg)`;
+                    // Получаем случайный угол для начальной позиции стрелки
+                    const randomRotation = getRandomRotation();
+                    clock.style.transform = `rotate(${randomRotation}deg)`;
 
-                clock.style.left = `${Math.random() * 100}%`;
-                clock.style.animationDuration = `${Math.random() * 5 + 5}s`;
-                document.body.appendChild(clock);
-            }, i * 500);
+                    clock.style.left = `${Math.random() * 100}%`;
+                    clock.style.animationDuration = `${Math.random() * 5 + 5}s`;
+                    document.body.appendChild(clock);
+                }, i * 500);
+            }
+        }
+
+        function playGame() {
+            // Действия по нажатию кнопки "Играть"
+            alert('Игра еще не разработана. Подождите обновлений!');
         }
     </script>
 </body>
