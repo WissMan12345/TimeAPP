@@ -72,7 +72,7 @@
         #message p:first-child {
             font-weight: bold;
         }
-        #startButton, #playButton, #backButton {
+        #startButton, #playButton, #backButton, .additionalButton {
             background-color: #ff4081;
             color: white;
             font-size: 1.5rem;
@@ -81,7 +81,7 @@
             cursor: pointer;
             margin-top: 20px;
         }
-        #startButton:hover, #playButton:hover, #backButton:hover {
+        #startButton:hover, #playButton:hover, #backButton:hover, .additionalButton:hover {
             background-color: #f50057;
         }
         #timeTitle {
@@ -167,6 +167,26 @@
             text-align: center;
             width: 100%;
         }
+        /* Стили для дополнительных кнопок */
+        .additionalButtonContainer {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+        .additionalButton {
+            font-size: 1.2rem;
+            padding: 8px 16px;
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+            cursor: pointer;
+        }
+        .additionalButton:hover {
+            background-color: white;
+            color: #ff4081;
+        }
     </style>
 </head>
 <body>
@@ -183,6 +203,10 @@
         <div id="timeTitle">TIME</div>
         <div id="tokenBalance">Баланс токенов Time: <span id="balance">0</span></div>
         <button id="playButton" onclick="playGame()">Играть</button>
+        <div class="additionalButtonContainer">
+            <button class="additionalButton" onclick="alert('Раздел Квесты еще не разработан')">Квесты</button>
+            <button class="additionalButton" onclick="alert('Раздел Друзья еще в разработке')">Друзья</button>
+        </div>
     </div>
     <div id="heart">😍</div>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -194,11 +218,13 @@
         function startGame() {
             document.getElementById('startScreen').style.display = 'none';
             document.getElementById('timeSection').style.display = 'flex';
+            localStorage.setItem('currentScreen', 'timeSection');
         }
 
         function backToStart() {
             document.getElementById('startScreen').style.display = 'flex';
             document.getElementById('timeSection').style.display = 'none';
+            localStorage.setItem('currentScreen', 'startScreen');
         }
 
         function generateClocks() {
@@ -234,6 +260,10 @@
             const username = telegram.initDataUnsafe.user.username;
             if (username) {
                 displayUsername(username);
+            }
+            const currentScreen = localStorage.getItem('currentScreen');
+            if (currentScreen === 'timeSection') {
+                startGame();
             }
         }
     </script>
