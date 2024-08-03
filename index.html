@@ -9,7 +9,6 @@
         body {
             font-family: 'Poppins', sans-serif;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -19,13 +18,30 @@
             overflow: hidden;
             position: relative;
         }
+        #startScreen, #timeSection {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        #startScreen {
+            z-index: 2;
+        }
+        #timeSection {
+            display: none;
+            z-index: 1;
+        }
         #title {
             font-size: 4rem;
             font-weight: 700;
             margin: 10px 0;
             color: #ff4081;
             position: relative;
-            z-index: 2;
         }
         #title::before {
             content: '';
@@ -52,12 +68,11 @@
             font-size: 2rem;
             font-weight: 500;
             margin: 10px 0;
-            z-index: 2;
         }
         #message p:first-child {
             font-weight: bold;
         }
-        #startButton {
+        #startButton, #playButton, #backButton {
             background-color: #ff4081;
             color: white;
             font-size: 1.5rem;
@@ -65,23 +80,9 @@
             border: none;
             cursor: pointer;
             margin-top: 20px;
-            z-index: 2;
         }
-        #startButton:hover {
+        #startButton:hover, #playButton:hover, #backButton:hover {
             background-color: #f50057;
-        }
-        #timeSection {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: black;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
         }
         #timeTitle {
             font-size: 4rem;
@@ -93,20 +94,6 @@
         #tokenBalance {
             margin-top: 20px;
             font-size: 1.5rem;
-            z-index: 2;
-        }
-        #playButton {
-            background-color: #ff4081;
-            color: white;
-            font-size: 1.5rem;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-            margin-top: 20px;
-            z-index: 2;
-        }
-        #playButton:hover {
-            background-color: #f50057;
         }
         .clock {
             width: 50px;
@@ -115,7 +102,6 @@
             position: absolute;
             animation: clockFall 10s linear infinite;
             transform-origin: center;
-            z-index: 1;
         }
         .clock::before {
             content: "";
@@ -166,23 +152,32 @@
             position: absolute;
             bottom: 10px;
             font-size: 5rem;
-            z-index: 2;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
         @keyframes clockFall {
             from { top: -10%; }
             to { top: 110%; }
         }
+        #backButton {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 1rem;
+            padding: 5px 10px;
+        }
     </style>
 </head>
 <body>
-    <div id="title">TIME</div>
-    <div id="message">
-        <p>Привет друг!</p>
-        <p id="appStatus">В разработке V. 0.0.1</p>
+    <div id="startScreen">
+        <div id="title">TIME</div>
+        <div id="message">
+            <p>Привет друг!</p>
+            <p id="appStatus">В разработке V. 0.0.1</p>
+        </div>
+        <button id="startButton" onclick="startGame()">Начать</button>
     </div>
-    <button id="startButton" onclick="startGame()">Начать</button>
     <div id="timeSection">
+        <button id="backButton" onclick="backToStart()">⬅ Назад</button>
         <div id="timeTitle">TIME</div>
         <div id="tokenBalance">Баланс токенов Time: <span id="balance">0</span></div>
         <button id="playButton" onclick="playGame()">Играть</button>
@@ -194,9 +189,13 @@
         }
 
         function startGame() {
-            document.getElementById('startButton').style.display = 'none';
-            document.getElementById('message').style.display = 'none';
+            document.getElementById('startScreen').style.display = 'none';
             document.getElementById('timeSection').style.display = 'flex';
+        }
+
+        function backToStart() {
+            document.getElementById('startScreen').style.display = 'flex';
+            document.getElementById('timeSection').style.display = 'none';
         }
 
         function generateClocks() {
