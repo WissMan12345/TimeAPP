@@ -57,13 +57,23 @@
         #message p:first-child {
             font-weight: bold;
         }
-        @keyframes clockFall {
-            0% {
-                transform: translateY(-100vh) rotate(0deg);
-            }
-            100% {
-                transform: translateY(100vh) rotate(360deg);
-            }
+        #startButton {
+            background-color: #ff4081;
+            color: white;
+            font-size: 1.5rem;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+            z-index: 2;
+        }
+        #startButton:hover {
+            background-color: #f50057;
+        }
+        #tokenBalance {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            z-index: 2;
         }
         .clock {
             width: 50px;
@@ -132,12 +142,21 @@
     <div id="title">TIME</div>
     <div id="message">
         <p>Привет друг!</p>
-        <p>Наше приложение еще в разработке, будет готово принять тебя немного позже!</p>
+        <p id="appStatus">В разработке V. 0.0.1</p>
+    </div>
+    <button id="startButton" onclick="showTimeSection()">Начать</button>
+    <div id="timeSection" style="display: none;">
+        <div id="title">TIME</div>
+        <div id="tokenBalance">Баланс токенов: <span id="balance">0</span></div>
     </div>
     <div id="heart">😍</div>
     <script>
         function getRandomRotation() {
             return Math.floor(Math.random() * 360); // Получаем случайный угол от 0 до 359 градусов
+        }
+
+        function showTimeSection() {
+            document.getElementById('timeSection').style.display = 'block';
         }
 
         // Генерация множества часов
