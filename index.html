@@ -163,7 +163,7 @@
         #heart {
             font-size: 3rem;
             position: absolute;
-            bottom: 20px;
+            bottom: 60px; /* Увеличено расстояние от нижней части страницы */
             text-align: center;
             width: 100%;
         }
@@ -173,11 +173,12 @@
             bottom: 20px;
             width: 100%;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
+            gap: 20px; /* Расстояние между кнопками */
         }
         .additionalButton {
-            font-size: 1.2rem;
-            padding: 8px 16px;
+            font-size: 1.5rem; /* Увеличен размер шрифта */
+            padding: 12px 24px; /* Увеличены отступы */
             background-color: transparent;
             color: white;
             border: 2px solid white;
@@ -194,7 +195,7 @@
         <div id="title">TIME</div>
         <div id="message">
             <p id="greetingMessage">Привет друг!</p>
-            <p id="appStatus">В разработке V. 0.0.1</p>
+            <p id="appStatus">В разработке V. 0.0.2</p>
         </div>
         <button id="startButton" onclick="startGame()">Начать</button>
     </div>
