@@ -171,7 +171,7 @@
     <div id="startScreen">
         <div id="title">TIME</div>
         <div id="message">
-            <p>Привет друг!</p>
+            <p id="greetingMessage">Привет друг!</p>
             <p id="appStatus">В разработке V. 0.0.1</p>
         </div>
         <button id="startButton" onclick="startGame()">Начать</button>
@@ -228,8 +228,28 @@
             alert('Игра еще не разработана. Подождите обновлений!');
         }
 
+        // Функция для отображения имени пользователя
+        function displayUsername(username) {
+            document.getElementById('greetingMessage').textContent = `Привет, ${username}!`;
+        }
+
+        // Функция для получения параметров URL
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
         // Вызов функции генерации часов при загрузке страницы
-        window.onload = generateClocks;
+        window.onload = function() {
+            generateClocks();
+            // Получение имени пользователя из URL и отображение его
+            const username = getUrlParameter('username');
+            if (username) {
+                displayUsername(username);
+            }
+        };
     </script>
 </body>
 </html>
