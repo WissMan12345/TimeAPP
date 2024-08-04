@@ -241,7 +241,7 @@
     <div id="startScreen">
         <div id="title">TIME</div>
         <div id="message">
-            <p id="greetingMessage">Привет!</p>
+            <p id="greetingMessage">Привет, <span id="username">USERNAME</span>!</p>
             <p id="appStatus">Версия приложения 0.0.5</p>
         </div>
         <button id="startButton" onclick="startGame()">Начать</button>
@@ -260,13 +260,13 @@
             <div class="menuHeader">Количество приглашенных: <span id="inviteCount">0</span></div>
             <button id="copyLinkButton" onclick="copyReferralLink()">Скопировать ссылку</button>
             <button id="inviteFriendButton" onclick="inviteFriend()">Пригласить друга</button>
-            <button class="additionalButton" onclick="closeMenu('friendsMenu')">Назад</button>
+            <button class="additionalButton" onclick="closeMenu('friendsMenu')">Закрыть</button>
         </div>
         <div id="questsMenu" class="menu hidden">
             <div class="menuHeader">Пригласить первого друга</div>
             <button id="startQuestButton" onclick="startQuest()">Начать квест</button>
             <span id="questReward">Награда: 500 токенов</span>
-            <button class="additionalButton" onclick="closeMenu('questsMenu')">Назад</button>
+            <button class="additionalButton" onclick="closeMenu('questsMenu')">Закрыть</button>
         </div>
     </div>
     <div id="heart">❤️</div>
@@ -275,6 +275,10 @@
         let inviteCount = 0;
 
         document.addEventListener("DOMContentLoaded", function() {
+            // Удалим ранее созданные часы в центре экрана
+            document.querySelectorAll('.clock.center').forEach(clock => clock.remove());
+
+            // Создадим падающие часы
             for (let i = 0; i < 20; i++) {
                 createFallingClock();
             }
@@ -360,6 +364,11 @@
             tokenBalance += 500;
             document.getElementById('balance').textContent = tokenBalance;
         }
+
+        // Устанавливаем имя пользователя
+        const username = "USERNAME"; // Здесь должно быть ваше имя пользователя
+        document.getElementById('username').textContent = username;
+
     </script>
 </body>
 </html>
