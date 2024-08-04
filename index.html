@@ -186,15 +186,37 @@
             background-color: white;
             color: #ff4081;
         }
-        #referralContainer {
-            margin-top: 20px;
-            text-align: center;
-        }
         #friendsMenu {
             display: none;
             flex-direction: column;
             gap: 10px;
             margin-top: 20px;
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        #friendsMenu.hidden {
+            display: none;
+        }
+        #copyLinkButton, #inviteFriendButton {
+            font-size: 1.5rem;
+            padding: 12px 24px;
+            background-color: #ff4081;
+            color: white;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+        }
+        #copyLinkButton:hover, #inviteFriendButton:hover {
+            background-color: #f50057;
+        }
+        #referralContainer {
+            margin-top: 20px;
+            text-align: center;
         }
     </style>
 </head>
@@ -202,7 +224,7 @@
     <div id="startScreen">
         <div id="title">TIME</div>
         <div id="message">
-            <p id="greetingMessage">Привет друг!</p>
+            <p id="greetingMessage">Привет!</p>
             <p id="appStatus">В разработке V. 0.0.2</p>
         </div>
         <button id="startButton" onclick="startGame()">Начать</button>
@@ -213,16 +235,11 @@
         <div id="tokenBalance">Баланс токенов Time: <span id="balance">0</span></div>
         <button id="playButton" onclick="playGame()">Играть</button>
         <div class="additionalButtonContainer">
-            <button class="additionalButton" onclick="alert('Раздел Квесты еще не разработан')">Квесты</button>
-            <button class="additionalButton" id="friendsButton">Друзья</button>
+            <button class="additionalButton" onclick="toggleFriendsMenu()">Друзья</button>
         </div>
-        <div id="friendsMenu">
-            <button class="additionalButton" id="copyLinkButton">Скопировать ссылку</button>
-            <button class="additionalButton" id="inviteFriendButton">Пригласить друга</button>
-        </div>
-        <div id="referralContainer">
-            <p>Пригласите друзей и получите бонусы:</p>
-            <p id="referralLink"></p>
+        <div id="friendsMenu" class="hidden">
+            <button id="copyLinkButton" onclick="copyReferralLink()">Скопировать ссылку</button>
+            <button id="inviteFriendButton" onclick="inviteFriend()">Пригласить друга</button>
         </div>
     </div>
     <div id="heart">😍</div>
@@ -285,51 +302,54 @@
         function backToStart() {
             document.getElementById('startScreen').style.display = 'flex';
             document.getElementById('timeSection').style.display = 'none';
+            hideFriendsMenu(); // Скрыть меню друзей при возвращении на стартовый экран
         }
 
         function playGame() {
+            document.getElementById('friendsMenu').classList.add('hidden'); // Скрыть меню друзей при начале игры
             alert('Игра началась!');
         }
 
+        function toggleFriendsMenu() {
+            const friendsMenu = document.getElementById('friendsMenu');
+            friendsMenu.classList.toggle('hidden');
+        }
+
+        function hideFriendsMenu() {
+            const friendsMenu = document.getElementById('friendsMenu');
+            friendsMenu.classList.add('hidden');
+        }
+
+        function inviteFriend() {
+            const referralLink = generateReferralLink();
+            // Логика для приглашения друга, например через Telegram
+            alert('Функционал приглашения друга еще в разработке!');
+        }
+
+        function copyReferralLink() {
+            const referralLink = generateReferralLink();
+            navigator.clipboard.writeText(referralLink).then(() => {
+                alert('Ссылка приглашения скопирована в буфер обмена!');
+            }).catch(err => {
+                console.error('Ошибка при копировании ссылки:', err);
+                alert('Не удалось скопировать ссылку. Попробуйте вручную.');
+            });
+        }
+
         window.onload = function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const referralCode = urlParams.get('ref');
-            if (referralCode) {
-                handleReferral(referralCode);
-            }
+            const telegram = window.Telegram.WebApp;
+            const userName = telegram.initDataUnsafe.user.username;
+            document.getElementById('greetingMessage').textContent = `Привет, ${userName}!`;
 
-            // Прочие функции...
-
-            // Функция для копирования ссылки в буфер обмена
-            function copyReferralLink() {
-                const referralLink = generateReferralLink();
-                navigator.clipboard.writeText(referralLink).then(() => {
-                    alert('Ссылка приглашения скопирована в буфер обмена!');
-                }).catch(err => {
-                    console.error('Ошибка при копировании ссылки:', err);
-                    alert('Не удалось скопировать ссылку. Попробуйте вручную.');
-                });
-            }
-
-            // Обработчик нажатия кнопки "Скопировать ссылку"
-            document.getElementById('copyLinkButton').addEventListener('click', copyReferralLink);
-
-            // Обработчик нажатия кнопки "Пригласить друга"
-            document.getElementById('inviteFriendButton').addEventListener('click', function() {
-                const referralLink = generateReferralLink();
-                // Здесь может быть логика для отправки приглашения другу, например через Telegram
-                alert('Функционал приглашения друга еще в разработке!');
-            });
-
-            document.getElementById('friendsButton').addEventListener('click', function() {
+            // Обработчик клика для скрытия меню друзей при клике вне его области
+            document.addEventListener('click', function(event) {
                 const friendsMenu = document.getElementById('friendsMenu');
-                friendsMenu.style.display = 'flex';
-
-                // Отображение ссылки приглашения при первом нажатии на кнопку "Друзья"
-                const referralLink = generateReferralLink();
-                document.getElementById('referralLink').textContent = referralLink;
+                if (!friendsMenu.contains(event.target)) {
+                    hideFriendsMenu();
+                }
             });
 
+            // Остальные функции...
         }
     </script>
 </body>
