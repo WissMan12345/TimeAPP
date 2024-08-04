@@ -196,6 +196,10 @@
             gap: 10px;
             margin-top: 20px;
         }
+        #inviteCount {
+            margin-top: 10px;
+            font-size: 1.2rem;
+        }
     </style>
 </head>
 <body>
@@ -219,6 +223,8 @@
         <div id="friendsMenu">
             <button class="additionalButton" id="copyLinkButton">Скопировать ссылку</button>
             <button class="additionalButton" id="inviteFriendButton">Пригласить друга</button>
+            <div id="inviteCount">Приглашенные друзья: <span id="inviteCountValue">0</span></div>
+            <button class="additionalButton" onclick="hideFriendsMenu()">⬅ Назад</button>
         </div>
         <div id="referralContainer">
             <p>Пригласите друзей и получите бонусы:</p>
@@ -249,88 +255,85 @@
         function generateReferralLink() {
             const telegram = window.Telegram.WebApp;
             const userId = telegram.initDataUnsafe.user.id;
-            const referralCode = btoa(userId); // Base64 кодирование userId
-            const referralLink = `https://t.me/TimeMiniAppBot/app?startapp=ref_${referralCode}`;
-            return referralLink;
-        }
-
-        async function updateBalance(earnedTokens) {
-            const telegram = window.Telegram.WebApp;
-            const userId = telegram.initDataUnsafe.user.id;
-            const currentBalance = parseInt(document.getElementById('balance').textContent);
-            const newBalance = currentBalance + earnedTokens;
-            document.getElementById('balance').textContent = newBalance;
-            try {
-                const response = await fetch(`http://localhost:3000/api/balance`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ userId, newBalance }),
-                });
-                const data = await response.json();
-                console.log('Баланс обновлен:', data);
-            } catch (error) {
-                console.error('Ошибка при обновлении баланса:', error);
-            }
+            const referralCode = Math.random().toString(36).substr(2, 7);
+            const referralLink = `http://localhost:3000/referral/${referralCode}`;
+            document.getElementById('referralLink').innerHTML = referralLink;
+            handleReferral(referralCode);
         }
 
         function startGame() {
             document.getElementById('startScreen').style.display = 'none';
             document.getElementById('timeSection').style.display = 'flex';
-            const clocks = document.querySelectorAll('.clock');
-            clocks.forEach(clock => clock.style.display = 'block');
+            generateReferralLink();
+            generateClocks(10); // Number of clocks to generate
         }
 
         function backToStart() {
             document.getElementById('startScreen').style.display = 'flex';
             document.getElementById('timeSection').style.display = 'none';
+            stopClocksAnimation();
         }
 
         function playGame() {
-            alert('Игра началась!');
+            alert('Игра в разработке. Скоро будет доступна!');
         }
 
-        window.onload = function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const referralCode = urlParams.get('ref');
-            if (referralCode) {
-                handleReferral(referralCode);
-            }
-
-            // Прочие функции...
-
-            // Функция для копирования ссылки в буфер обмена
-            function copyReferralLink() {
-                const referralLink = generateReferralLink();
-                navigator.clipboard.writeText(referralLink).then(() => {
-                    alert('Ссылка приглашения скопирована в буфер обмена!');
-                }).catch(err => {
-                    console.error('Ошибка при копировании ссылки:', err);
-                    alert('Не удалось скопировать ссылку. Попробуйте вручную.');
-                });
-            }
-
-            // Обработчик нажатия кнопки "Скопировать ссылку"
-            document.getElementById('copyLinkButton').addEventListener('click', copyReferralLink);
-
-            // Обработчик нажатия кнопки "Пригласить друга"
-            document.getElementById('inviteFriendButton').addEventListener('click', function() {
-                const referralLink = generateReferralLink();
-                // Здесь может быть логика для отправки приглашения другу, например через Telegram
-                alert('Функционал приглашения друга еще в разработке!');
-            });
-
-            document.getElementById('friendsButton').addEventListener('click', function() {
-                const friendsMenu = document.getElementById('friendsMenu');
-                friendsMenu.style.display = 'flex';
-
-                // Отображение ссылки приглашения при первом нажатии на кнопку "Друзья"
-                const referralLink = generateReferralLink();
-                document.getElementById('referralLink').textContent = referralLink;
-            });
-
+        function showFriendsMenu() {
+            document.getElementById('friendsMenu').style.display = 'flex';
+            document.getElementById('referralContainer').style.display = 'none';
         }
+
+        function hideFriendsMenu() {
+            document.getElementById('friendsMenu').style.display = 'none';
+            document.getElementById('referralContainer').style.display = 'block';
+        }
+
+        function generateClocks(count) {
+            const container = document.getElementById('timeSection');
+            for (let i = 0; i < count; i++) {
+                const clock = document.createElement('div');
+                clock.className = 'clock';
+                clock.style.left = `${Math.random() * 100}vw`;
+                container.appendChild(clock);
+            }
+        }
+
+        function stopClocksAnimation() {
+            const clocks = document.getElementsByClassName('clock');
+            while (clocks.length > 0) {
+                clocks[0].parentNode.removeChild(clocks[0]);
+            }
+        }
+
+        document.getElementById('friendsButton').addEventListener('click', showFriendsMenu);
+
+        document.getElementById('copyLinkButton').addEventListener('click', () => {
+            const referralLink = document.getElementById('referralLink').innerText;
+            navigator.clipboard.writeText(referralLink).then(() => {
+                alert('Ссылка скопирована в буфер обмена!');
+            }).catch((error) => {
+                console.error('Не удалось скопировать ссылку:', error);
+            });
+        });
+
+        document.getElementById('inviteFriendButton').addEventListener('click', () => {
+            const referralLink = document.getElementById('referralLink').innerText;
+            telegram.shareGame(referralLink);
+        });
+
+        // Mocking Telegram WebApp
+        window.Telegram = {
+            WebApp: {
+                initDataUnsafe: {
+                    user: {
+                        id: 123456789, // Mocked user ID
+                    },
+                },
+                shareGame: (link) => {
+                    console.log('Shared game with link:', link);
+                },
+            },
+        };
     </script>
 </body>
 </html>
