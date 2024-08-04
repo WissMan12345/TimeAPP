@@ -91,13 +91,6 @@
             text-align: center;
             margin-bottom: 20px;
         }
-        #inviteMessage {
-            font-size: 1.5rem;
-            font-weight: 500;
-            color: #f2f2f2;
-            text-align: center;
-            margin-top: 10px;
-        }
         #tokenBalance {
             margin-top: 20px;
             font-size: 1.5rem;
@@ -166,6 +159,13 @@
             font-size: 1rem;
             padding: 5px 10px;
         }
+        #heart {
+            font-size: 3rem;
+            position: absolute;
+            bottom: 60px;
+            text-align: center;
+            width: 100%;
+        }
         .additionalButtonContainer {
             position: absolute;
             bottom: 20px;
@@ -186,54 +186,15 @@
             background-color: white;
             color: #ff4081;
         }
-        #friendsMenu, #questsMenu {
-            display: none;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 20px;
-            position: absolute;
-            bottom: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(0, 0, 0, 0.8);
-            padding: 20px;
-            border-radius: 10px;
-        }
-        .menu.hidden {
-            display: none;
-        }
-        #copyLinkButton, #inviteFriendButton {
-            font-size: 1.5rem;
-            padding: 12px 24px;
-            background-color: #ff4081;
-            color: white;
-            border: none;
-            cursor: pointer;
-            text-align: center;
-        }
-        #copyLinkButton:hover, #inviteFriendButton:hover {
-            background-color: #f50057;
-        }
         #referralContainer {
             margin-top: 20px;
             text-align: center;
         }
-        .menuHeader {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-        #questReward {
-            color: #ff4081;
-            font-weight: bold;
-            margin-left: 10px;
-        }
-        #heart {
-            font-size: 3rem;
-            position: absolute;
-            bottom: 60px;
-            text-align: center;
-            width: 100%;
+        #friendsMenu {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -241,76 +202,84 @@
     <div id="startScreen">
         <div id="title">TIME</div>
         <div id="message">
-            <p id="greetingMessage">Привет, <span id="username">USERNAME</span>!</p>
-            <p id="appStatus">Версия приложения 0.0.5</p>
+            <p id="greetingMessage">Привет друг!</p>
+            <p id="appStatus">В разработке V. 0.0.2</p>
         </div>
         <button id="startButton" onclick="startGame()">Начать</button>
     </div>
     <div id="timeSection">
         <button id="backButton" onclick="backToStart()">⬅ Назад</button>
         <div id="timeTitle">TIME</div>
-        <div id="inviteMessage">Приглашайте друзей и получайте бонусы!</div>
         <div id="tokenBalance">Баланс токенов Time: <span id="balance">0</span></div>
         <button id="playButton" onclick="playGame()">Играть</button>
         <div class="additionalButtonContainer">
-            <button class="additionalButton" onclick="showFriendsMenu()">Друзья</button>
-            <button class="additionalButton" onclick="showQuestsMenu()">Квесты</button>
+            <button class="additionalButton" onclick="alert('Раздел Квесты еще не разработан')">Квесты</button>
+            <button class="additionalButton" id="friendsButton">Друзья</button>
         </div>
-        <div id="friendsMenu" class="menu hidden">
-            <div class="menuHeader">Количество приглашенных: <span id="inviteCount">0</span></div>
-            <button id="copyLinkButton" onclick="copyReferralLink()">Скопировать ссылку</button>
-            <button id="inviteFriendButton" onclick="inviteFriend()">Пригласить друга</button>
-            <button class="additionalButton" onclick="closeMenu('friendsMenu')">Закрыть</button>
+        <div id="friendsMenu">
+            <button class="additionalButton" id="copyLinkButton">Скопировать ссылку</button>
+            <button class="additionalButton" id="inviteFriendButton">Пригласить друга</button>
         </div>
-        <div id="questsMenu" class="menu hidden">
-            <div class="menuHeader">Пригласить первого друга</div>
-            <button id="startQuestButton" onclick="startQuest()">Начать квест</button>
-            <span id="questReward">Награда: 500 токенов</span>
-            <button class="additionalButton" onclick="closeMenu('questsMenu')">Закрыть</button>
+        <div id="referralContainer">
+            <p>Пригласите друзей и получите бонусы:</p>
+            <p id="referralLink"></p>
         </div>
     </div>
-    <div id="heart">❤️</div>
+    <div id="heart">😍</div>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        let tokenBalance = 0;
-        let inviteCount = 0;
-
-        document.addEventListener("DOMContentLoaded", function() {
-            // Удалим ранее созданные часы в центре экрана
-            document.querySelectorAll('.clock.center').forEach(clock => clock.remove());
-
-            // Создадим падающие часы
-            for (let i = 0; i < 20; i++) {
-                createFallingClock();
+        async function handleReferral(referralCode) {
+            try {
+                const telegram = window.Telegram.WebApp;
+                const userId = telegram.initDataUnsafe.user.id;
+                const response = await fetch(`http://localhost:3000/api/referral`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ userId, referralCode }),
+                });
+                const data = await response.json();
+                console.log('Реферальный код обработан:', data);
+            } catch (error) {
+                console.error('Ошибка при обработке реферального кода:', error);
             }
-        });
+        }
 
-        function createFallingClock() {
-            const clock = document.createElement('div');
-            clock.className = 'clock';
-            const mark0 = document.createElement('div');
-            mark0.className = 'mark mark-0';
-            const mark3 = document.createElement('div');
-            mark3.className = 'mark mark-3';
-            const mark6 = document.createElement('div');
-            mark6.className = 'mark mark-6';
-            const mark9 = document.createElement('div');
-            mark9.className = 'mark mark-9';
-            clock.appendChild(mark0);
-            clock.appendChild(mark3);
-            clock.appendChild(mark6);
-            clock.appendChild(mark9);
-            clock.style.left = Math.random() * 100 + '%';
-            clock.style.animationDelay = Math.random() * 10 + 's';
-            document.body.appendChild(clock);
+        function generateReferralLink() {
+            const telegram = window.Telegram.WebApp;
+            const userId = telegram.initDataUnsafe.user.id;
+            const referralCode = btoa(userId); // Base64 кодирование userId
+            const referralLink = `https://t.me/TimeMiniAppBot/app?startapp=ref_${referralCode}`;
+            return referralLink;
+        }
+
+        async function updateBalance(earnedTokens) {
+            const telegram = window.Telegram.WebApp;
+            const userId = telegram.initDataUnsafe.user.id;
+            const currentBalance = parseInt(document.getElementById('balance').textContent);
+            const newBalance = currentBalance + earnedTokens;
+            document.getElementById('balance').textContent = newBalance;
+            try {
+                const response = await fetch(`http://localhost:3000/api/balance`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ userId, newBalance }),
+                });
+                const data = await response.json();
+                console.log('Баланс обновлен:', data);
+            } catch (error) {
+                console.error('Ошибка при обновлении баланса:', error);
+            }
         }
 
         function startGame() {
             document.getElementById('startScreen').style.display = 'none';
             document.getElementById('timeSection').style.display = 'flex';
-        }
-
-        function playGame() {
-            alert("Игра началась!");
+            const clocks = document.querySelectorAll('.clock');
+            clocks.forEach(clock => clock.style.display = 'block');
         }
 
         function backToStart() {
@@ -318,57 +287,50 @@
             document.getElementById('timeSection').style.display = 'none';
         }
 
-        function showFriendsMenu() {
-            toggleMenu('friendsMenu');
+        function playGame() {
+            alert('Игра началась!');
         }
 
-        function showQuestsMenu() {
-            toggleMenu('questsMenu');
-        }
-
-        function toggleMenu(menuId) {
-            const menu = document.getElementById(menuId);
-            if (menu.classList.contains('hidden')) {
-                menu.classList.remove('hidden');
-            } else {
-                menu.classList.add('hidden');
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const referralCode = urlParams.get('ref');
+            if (referralCode) {
+                handleReferral(referralCode);
             }
-        }
 
-        function closeMenu(menuId) {
-            const menu = document.getElementById(menuId);
-            menu.classList.add('hidden');
-        }
+            // Прочие функции...
 
-        function copyReferralLink() {
-            const referralLink = "https://example.com/?ref=12345";
-            navigator.clipboard.writeText(referralLink).then(function() {
-                alert('Реферальная ссылка скопирована!');
-            }, function() {
-                alert('Ошибка копирования ссылки.');
+            // Функция для копирования ссылки в буфер обмена
+            function copyReferralLink() {
+                const referralLink = generateReferralLink();
+                navigator.clipboard.writeText(referralLink).then(() => {
+                    alert('Ссылка приглашения скопирована в буфер обмена!');
+                }).catch(err => {
+                    console.error('Ошибка при копировании ссылки:', err);
+                    alert('Не удалось скопировать ссылку. Попробуйте вручную.');
+                });
+            }
+
+            // Обработчик нажатия кнопки "Скопировать ссылку"
+            document.getElementById('copyLinkButton').addEventListener('click', copyReferralLink);
+
+            // Обработчик нажатия кнопки "Пригласить друга"
+            document.getElementById('inviteFriendButton').addEventListener('click', function() {
+                const referralLink = generateReferralLink();
+                // Здесь может быть логика для отправки приглашения другу, например через Telegram
+                alert('Функционал приглашения друга еще в разработке!');
             });
+
+            document.getElementById('friendsButton').addEventListener('click', function() {
+                const friendsMenu = document.getElementById('friendsMenu');
+                friendsMenu.style.display = 'flex';
+
+                // Отображение ссылки приглашения при первом нажатии на кнопку "Друзья"
+                const referralLink = generateReferralLink();
+                document.getElementById('referralLink').textContent = referralLink;
+            });
+
         }
-
-        function inviteFriend() {
-            inviteCount++;
-            document.getElementById('inviteCount').textContent = inviteCount;
-            alert('Друг приглашен!');
-        }
-
-        function startQuest() {
-            alert('Квест начался! Скопируйте ссылку и пригласите друга.');
-            copyReferralLink();
-            document.getElementById('startQuestButton').textContent = 'Выполнено';
-            document.getElementById('startQuestButton').disabled = true;
-            document.getElementById('startQuestButton').style.backgroundColor = 'green';
-            tokenBalance += 500;
-            document.getElementById('balance').textContent = tokenBalance;
-        }
-
-        // Устанавливаем имя пользователя
-        const username = "USERNAME"; // Здесь должно быть ваше имя пользователя
-        document.getElementById('username').textContent = username;
-
     </script>
 </body>
 </html>
