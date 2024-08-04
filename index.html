@@ -206,7 +206,7 @@
     <div id="startScreen">
         <div id="title">TIME</div>
         <div id="message">
-            <p id="greetingMessage">Привет друг!</p>
+            <p id="greetingMessage">Привет!</p>
             <p id="appStatus">В разработке V. 0.0.2</p>
         </div>
         <button id="startButton" onclick="startGame()">Начать</button>
@@ -255,17 +255,17 @@
         function generateReferralLink() {
             const telegram = window.Telegram.WebApp;
             const userId = telegram.initDataUnsafe.user.id;
-            const referralCode = Math.random().toString(36).substr(2, 7);
-            const referralLink = `http://localhost:3000/referral/${referralCode}`;
+            const encodedUserId = btoa(userId.toString()); // Кодируем userId в Base64
+            const referralLink = `https://t.me/TimeMiniAppBot/app?startapp=ref_${encodedUserId}`;
             document.getElementById('referralLink').innerHTML = referralLink;
-            handleReferral(referralCode);
+            handleReferral(referralLink);
         }
 
         function startGame() {
             document.getElementById('startScreen').style.display = 'none';
             document.getElementById('timeSection').style.display = 'flex';
             generateReferralLink();
-            generateClocks(10); // Number of clocks to generate
+            generateClocks(10); // Число падающих часов на экране
         }
 
         function backToStart() {
@@ -294,6 +294,7 @@
                 const clock = document.createElement('div');
                 clock.className = 'clock';
                 clock.style.left = `${Math.random() * 100}vw`;
+                clock.style.animationDuration = `${Math.random() * 5 + 5}s`;
                 container.appendChild(clock);
             }
         }
@@ -321,12 +322,13 @@
             telegram.shareGame(referralLink);
         });
 
-        // Mocking Telegram WebApp
+        // Mocking Telegram WebApp for local testing
         window.Telegram = {
             WebApp: {
                 initDataUnsafe: {
                     user: {
                         id: 123456789, // Mocked user ID
+                        first_name: 'User', // Mocked user first name
                     },
                 },
                 shareGame: (link) => {
@@ -334,6 +336,12 @@
                 },
             },
         };
+
+        // Update the greeting message with the user's first name
+        const telegram = window.Telegram.WebApp;
+        const userFirstName = telegram.initDataUnsafe.user.first_name || 'друг';
+        document.getElementById('greetingMessage').innerText = `Привет, ${userFirstName}!`;
+
     </script>
 </body>
 </html>
