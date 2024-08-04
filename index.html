@@ -188,6 +188,10 @@
             background-color: white;
             color: #ff4081;
         }
+        #referralContainer {
+            margin-top: 20px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -208,24 +212,64 @@
             <button class="additionalButton" onclick="alert('Раздел Квесты еще не разработан')">Квесты</button>
             <button class="additionalButton" onclick="alert('Раздел Друзья еще в разработке')">Друзья</button>
         </div>
+        <div id="referralContainer">
+            <p>Пригласите друзей и получите бонусы:</p>
+            <p id="referralLink"></p>
+        </div>
     </div>
     <div id="heart">😍</div>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
+        async function handleReferral(referralCode) {
+            try {
+                const telegram = window.Telegram.WebApp;
+                const userId = telegram.initDataUnsafe.user.id;
+                const response = await fetch(`http://localhost:3000/api/referral`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ userId, referralCode }),
+                });
+                const data = await response.json();
+                console.log('Реферальный код обработан:', data);
+            } catch (error) {
+                console.error('Ошибка при обработке реферального кода:', error);
+            }
+        }
+
+        function generateReferralLink() {
+            const telegram = window.Telegram.WebApp;
+            const userId = telegram.initDataUnsafe.user.id;
+            const referralCode = btoa(userId); // Base64 кодирование userId
+            const referralLink = `${window.location.origin}?ref=${referralCode}`;
+            document.getElementById('referralLink').textContent = referralLink;
+        }
+
+        async function updateBalance(earnedTokens) {
+            const telegram = window.Telegram.WebApp;
+            const userId = telegram.initDataUnsafe.user.id;
+            const currentBalance = parseInt(document.getElementById('balance').textContent);
+            const newBalance = currentBalance + earnedTokens;
+            document.getElementById('balance').textContent = newBalance;
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/balance`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ userId, balance: newBalance }),
+                });
+                const data = await response.json();
+                console.log('Баланс обновлен:', data);
+            } catch (error) {
+                console.error('Ошибка при обновлении баланса:', error);
+            }
+        }
+
         function getRandomRotation() {
             return Math.floor(Math.random() * 360);
-        }
-
-        function startGame() {
-            document.getElementById('startScreen').style.display = 'none';
-            document.getElementById('timeSection').style.display = 'flex';
-            localStorage.setItem('currentScreen', 'timeSection');
-        }
-
-        function backToStart() {
-            document.getElementById('startScreen').style.display = 'flex';
-            document.getElementById('timeSection').style.display = 'none';
-            localStorage.setItem('currentScreen', 'startScreen');
         }
 
         function generateClocks() {
@@ -247,6 +291,18 @@
             }
         }
 
+        function startGame() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('timeSection').style.display = 'flex';
+            localStorage.setItem('currentScreen', 'timeSection');
+        }
+
+        function backToStart() {
+            document.getElementById('startScreen').style.display = 'flex';
+            document.getElementById('timeSection').style.display = 'none';
+            localStorage.setItem('currentScreen', 'startScreen');
+        }
+
         function playGame() {
             alert('Игра еще не разработана. Подождите обновлений!');
         }
@@ -265,6 +321,12 @@
             const currentScreen = localStorage.getItem('currentScreen');
             if (currentScreen === 'timeSection') {
                 startGame();
+            }
+            generateReferralLink();
+            const urlParams = new URLSearchParams(window.location.search);
+            const referralCode = urlParams.get('ref');
+            if (referralCode) {
+                handleReferral(referralCode);
             }
         }
     </script>
