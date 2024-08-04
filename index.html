@@ -190,7 +190,6 @@
             margin-top: 20px;
             text-align: center;
         }
-        /* Новый стиль для меню друзей */
         #friendsMenu {
             display: none;
             flex-direction: column;
@@ -251,8 +250,8 @@
             const telegram = window.Telegram.WebApp;
             const userId = telegram.initDataUnsafe.user.id;
             const referralCode = btoa(userId); // Base64 кодирование userId
-            const referralLink = `${window.location.origin}?ref=${referralCode}`;
-            document.getElementById('referralLink').textContent = referralLink;
+            const referralLink = `https://t.me/TimeMiniAppBot/app?startapp=ref_${referralCode}`;
+            return referralLink;
         }
 
         async function updateBalance(earnedTokens) {
@@ -261,14 +260,13 @@
             const currentBalance = parseInt(document.getElementById('balance').textContent);
             const newBalance = currentBalance + earnedTokens;
             document.getElementById('balance').textContent = newBalance;
-
             try {
                 const response = await fetch(`http://localhost:3000/api/balance`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ userId, balance: newBalance }),
+                    body: JSON.stringify({ userId, newBalance }),
                 });
                 const data = await response.json();
                 console.log('Баланс обновлен:', data);
@@ -277,89 +275,61 @@
             }
         }
 
-        function getRandomRotation() {
-            return Math.floor(Math.random() * 360);
-        }
-
-        function generateClocks() {
-            for (let i = 0; i < 20; i++) {
-                setTimeout(() => {
-                    const clock = document.createElement('div');
-                    clock.className = 'clock';
-                    for (let j = 0; j < 4; j++) {
-                        const mark = document.createElement('div');
-                        mark.className = `mark mark-${j * 3}`;
-                        clock.appendChild(mark);
-                    }
-                    const randomRotation = getRandomRotation();
-                    clock.style.transform = `rotate(${randomRotation}deg)`;
-                    clock.style.left = `${Math.random() * 100}%`;
-                    clock.style.animationDuration = `${Math.random() * 5 + 5}s`;
-                    document.body.appendChild(clock);
-                }, i * 500);
-            }
-        }
-
         function startGame() {
             document.getElementById('startScreen').style.display = 'none';
             document.getElementById('timeSection').style.display = 'flex';
-            localStorage.setItem('currentScreen', 'timeSection');
+            const clocks = document.querySelectorAll('.clock');
+            clocks.forEach(clock => clock.style.display = 'block');
         }
 
         function backToStart() {
             document.getElementById('startScreen').style.display = 'flex';
             document.getElementById('timeSection').style.display = 'none';
-            document.getElementById('friendsMenu').style.display = 'none'; // Скрыть меню друзей при возврате на стартовый экран
-            localStorage.setItem('currentScreen', 'startScreen');
         }
 
         function playGame() {
-            alert('Игра еще не разработана. Подождите обновлений!');
-        }
-
-        function displayUsername(username) {
-            document.getElementById('greetingMessage').textContent = `Привет, ${username}!`;
+            alert('Игра началась!');
         }
 
         window.onload = function() {
-            generateClocks();
-            const telegram = window.Telegram.WebApp;
-            const username = telegram.initDataUnsafe.user.username;
-            if (username) {
-                displayUsername(username);
-            }
-            const currentScreen = localStorage.getItem('currentScreen');
-            if (currentScreen === 'timeSection') {
-                startGame();
-            }
-            generateReferralLink();
             const urlParams = new URLSearchParams(window.location.search);
             const referralCode = urlParams.get('ref');
             if (referralCode) {
                 handleReferral(referralCode);
             }
 
-            // Добавление обработчиков для кнопок меню друзей
-            document.getElementById('friendsButton').addEventListener('click', function() {
-                const friendsMenu = document.getElementById('friendsMenu');
-                friendsMenu.style.display = 'flex';
-            });
+            // Прочие функции...
 
-            document.getElementById('copyLinkButton').addEventListener('click', function() {
-                const referralLink = document.getElementById('referralLink').textContent;
+            // Функция для копирования ссылки в буфер обмена
+            function copyReferralLink() {
+                const referralLink = generateReferralLink();
                 navigator.clipboard.writeText(referralLink).then(() => {
-                    alert('Ссылка скопирована в буфер обмена!');
+                    alert('Ссылка приглашения скопирована в буфер обмена!');
                 }).catch(err => {
                     console.error('Ошибка при копировании ссылки:', err);
                     alert('Не удалось скопировать ссылку. Попробуйте вручную.');
                 });
-            });
+            }
 
+            // Обработчик нажатия кнопки "Скопировать ссылку"
+            document.getElementById('copyLinkButton').addEventListener('click', copyReferralLink);
+
+            // Обработчик нажатия кнопки "Пригласить друга"
             document.getElementById('inviteFriendButton').addEventListener('click', function() {
-                const referralLink = document.getElementById('referralLink').textContent;
-                // Здесь можно добавить логику для отправки приглашения другу
+                const referralLink = generateReferralLink();
+                // Здесь может быть логика для отправки приглашения другу, например через Telegram
                 alert('Функционал приглашения друга еще в разработке!');
             });
+
+            document.getElementById('friendsButton').addEventListener('click', function() {
+                const friendsMenu = document.getElementById('friendsMenu');
+                friendsMenu.style.display = 'flex';
+
+                // Отображение ссылки приглашения при первом нажатии на кнопку "Друзья"
+                const referralLink = generateReferralLink();
+                document.getElementById('referralLink').textContent = referralLink;
+            });
+
         }
     </script>
 </body>
