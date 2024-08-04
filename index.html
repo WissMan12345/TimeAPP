@@ -100,6 +100,7 @@
             height: 50px;
             background-color: transparent;
             position: absolute;
+            z-index: 0; /* Ensure clocks are on the lowest layer */
             animation: clockFall 10s linear infinite;
             transform-origin: center;
         }
@@ -246,102 +247,87 @@
                     body: JSON.stringify({ userId, referralCode }),
                 });
                 const data = await response.json();
-                console.log('Реферальный код обработан:', data);
+                console.log('Referral response:', data);
             } catch (error) {
-                console.error('Ошибка при обработке реферального кода:', error);
+                console.error('Referral error:', error);
             }
         }
 
-        function generateReferralLink() {
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const referralCode = urlParams.get('referralCode');
+            if (referralCode) {
+                handleReferral(referralCode);
+            }
+        });
+
+        window.onload = function() {
             const telegram = window.Telegram.WebApp;
-            const userId = telegram.initDataUnsafe.user.id;
-            const encodedUserId = btoa(userId.toString()); // Кодируем userId в Base64
-            const referralLink = `https://t.me/TimeMiniAppBot/app?startapp=ref_${encodedUserId}`;
-            document.getElementById('referralLink').innerHTML = referralLink;
-            handleReferral(referralLink);
+            const user = telegram.initDataUnsafe.user;
+            if (user) {
+                document.getElementById('greetingMessage').innerText = `Привет, ${user.first_name}!`;
+            }
         }
 
         function startGame() {
             document.getElementById('startScreen').style.display = 'none';
             document.getElementById('timeSection').style.display = 'flex';
-            generateReferralLink();
-            generateClocks(10); // Число падающих часов на экране
+            createFallingClocks();
         }
 
         function backToStart() {
             document.getElementById('startScreen').style.display = 'flex';
             document.getElementById('timeSection').style.display = 'none';
-            stopClocksAnimation();
+            clearFallingClocks();
         }
 
-        function playGame() {
-            alert('Игра в разработке. Скоро будет доступна!');
-        }
-
-        function showFriendsMenu() {
-            document.getElementById('friendsMenu').style.display = 'flex';
-            document.getElementById('referralContainer').style.display = 'none';
-        }
-
-        function hideFriendsMenu() {
-            document.getElementById('friendsMenu').style.display = 'none';
-            document.getElementById('referralContainer').style.display = 'block';
-        }
-
-        function generateClocks(count) {
-            const container = document.getElementById('timeSection');
-            for (let i = 0; i < count; i++) {
+        function createFallingClocks() {
+            for (let i = 0; i < 20; i++) {
                 const clock = document.createElement('div');
                 clock.className = 'clock';
                 clock.style.left = `${Math.random() * 100}vw`;
-                clock.style.animationDuration = `${Math.random() * 5 + 5}s`;
-                container.appendChild(clock);
+                clock.style.animationDelay = `${Math.random() * 10}s`;
+                clock.style.transform = `rotate(${Math.random() * 360}deg)`;
+                for (let j = 0; j < 4; j++) {
+                    const mark = document.createElement('div');
+                    mark.className = `mark mark-${j * 3}`;
+                    clock.appendChild(mark);
+                }
+                document.body.appendChild(clock);
             }
         }
 
-        function stopClocksAnimation() {
-            const clocks = document.getElementsByClassName('clock');
-            while (clocks.length > 0) {
-                clocks[0].parentNode.removeChild(clocks[0]);
-            }
+        function clearFallingClocks() {
+            const clocks = document.querySelectorAll('.clock');
+            clocks.forEach(clock => clock.remove());
         }
 
-        document.getElementById('friendsButton').addEventListener('click', showFriendsMenu);
+        function playGame() {
+            alert('Игра начинается!');
+        }
+
+        document.getElementById('friendsButton').addEventListener('click', () => {
+            document.getElementById('friendsMenu').style.display = 'flex';
+        });
 
         document.getElementById('copyLinkButton').addEventListener('click', () => {
-            const referralLink = document.getElementById('referralLink').innerText;
-            navigator.clipboard.writeText(referralLink).then(() => {
-                alert('Ссылка скопирована в буфер обмена!');
-            }).catch((error) => {
-                console.error('Не удалось скопировать ссылку:', error);
-            });
+            const link = document.getElementById('referralLink');
+            const textArea = document.createElement('textarea');
+            textArea.value = link.innerText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            alert('Ссылка скопирована в буфер обмена!');
         });
 
         document.getElementById('inviteFriendButton').addEventListener('click', () => {
-            const referralLink = document.getElementById('referralLink').innerText;
-            telegram.shareGame(referralLink);
+            alert('Приглашение друга еще не реализовано');
         });
 
-        // Mocking Telegram WebApp for local testing
-        window.Telegram = {
-            WebApp: {
-                initDataUnsafe: {
-                    user: {
-                        id: 123456789, // Mocked user ID
-                        first_name: 'User', // Mocked user first name
-                    },
-                },
-                shareGame: (link) => {
-                    console.log('Shared game with link:', link);
-                },
-            },
-        };
-
-        // Update the greeting message with the user's first name
-        const telegram = window.Telegram.WebApp;
-        const userFirstName = telegram.initDataUnsafe.user.first_name || 'друг';
-        document.getElementById('greetingMessage').innerText = `Привет, ${userFirstName}!`;
-
+        function hideFriendsMenu() {
+            document.getElementById('friendsMenu').style.display = 'none';
+        }
     </script>
 </body>
 </html>
