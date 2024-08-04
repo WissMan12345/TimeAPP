@@ -159,26 +159,24 @@
             font-size: 1rem;
             padding: 5px 10px;
         }
-        /* Новый стиль для смайлика */
         #heart {
             font-size: 3rem;
             position: absolute;
-            bottom: 60px; /* Увеличено расстояние от нижней части страницы */
+            bottom: 60px;
             text-align: center;
             width: 100%;
         }
-        /* Стили для дополнительных кнопок */
         .additionalButtonContainer {
             position: absolute;
             bottom: 20px;
             width: 100%;
             display: flex;
             justify-content: center;
-            gap: 20px; /* Расстояние между кнопками */
+            gap: 20px;
         }
         .additionalButton {
-            font-size: 1.5rem; /* Увеличен размер шрифта */
-            padding: 12px 24px; /* Увеличены отступы */
+            font-size: 1.5rem;
+            padding: 12px 24px;
             background-color: transparent;
             color: white;
             border: 2px solid white;
@@ -191,6 +189,13 @@
         #referralContainer {
             margin-top: 20px;
             text-align: center;
+        }
+        /* Новый стиль для меню друзей */
+        #friendsMenu {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -210,7 +215,11 @@
         <button id="playButton" onclick="playGame()">Играть</button>
         <div class="additionalButtonContainer">
             <button class="additionalButton" onclick="alert('Раздел Квесты еще не разработан')">Квесты</button>
-            <button class="additionalButton" onclick="alert('Раздел Друзья еще в разработке')">Друзья</button>
+            <button class="additionalButton" id="friendsButton">Друзья</button>
+        </div>
+        <div id="friendsMenu">
+            <button class="additionalButton" id="copyLinkButton">Скопировать ссылку</button>
+            <button class="additionalButton" id="inviteFriendButton">Пригласить друга</button>
         </div>
         <div id="referralContainer">
             <p>Пригласите друзей и получите бонусы:</p>
@@ -300,6 +309,7 @@
         function backToStart() {
             document.getElementById('startScreen').style.display = 'flex';
             document.getElementById('timeSection').style.display = 'none';
+            document.getElementById('friendsMenu').style.display = 'none'; // Скрыть меню друзей при возврате на стартовый экран
             localStorage.setItem('currentScreen', 'startScreen');
         }
 
@@ -328,6 +338,28 @@
             if (referralCode) {
                 handleReferral(referralCode);
             }
+
+            // Добавление обработчиков для кнопок меню друзей
+            document.getElementById('friendsButton').addEventListener('click', function() {
+                const friendsMenu = document.getElementById('friendsMenu');
+                friendsMenu.style.display = 'flex';
+            });
+
+            document.getElementById('copyLinkButton').addEventListener('click', function() {
+                const referralLink = document.getElementById('referralLink').textContent;
+                navigator.clipboard.writeText(referralLink).then(() => {
+                    alert('Ссылка скопирована в буфер обмена!');
+                }).catch(err => {
+                    console.error('Ошибка при копировании ссылки:', err);
+                    alert('Не удалось скопировать ссылку. Попробуйте вручную.');
+                });
+            });
+
+            document.getElementById('inviteFriendButton').addEventListener('click', function() {
+                const referralLink = document.getElementById('referralLink').textContent;
+                // Здесь можно добавить логику для отправки приглашения другу
+                alert('Функционал приглашения друга еще в разработке!');
+            });
         }
     </script>
 </body>
