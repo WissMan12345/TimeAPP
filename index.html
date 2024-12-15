@@ -136,19 +136,6 @@
                 transform: translate(-50%, -100%) rotate(360deg);
             }
         }
-        .mark {
-            position: absolute;
-            background-color: white;
-            width: 2px;
-            height: 6px;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        .mark-0 { transform: translate(-50%, -50%) translateY(-9px); }
-        .mark-3 { transform: translate(-50%, -50%) translateX(9px) rotate(90deg); }
-        .mark-6 { transform: translate(-50%, -50%) translateY(9px); }
-        .mark-9 { transform: translate(-50%, -50%) translateX(-9px) rotate(90deg); }
         @keyframes clockFall {
             from { top: -10%; }
             to { top: 110%; }
@@ -159,13 +146,6 @@
             left: 20px;
             font-size: 1rem;
             padding: 5px 10px;
-        }
-        #heart {
-            font-size: 3rem;
-            position: absolute;
-            bottom: 60px;
-            text-align: center;
-            width: 100%;
         }
         .additionalButtonContainer {
             position: absolute;
@@ -187,21 +167,53 @@
             background-color: white;
             color: #ff4081;
         }
-        #referralContainer {
-            margin-top: 20px;
-            text-align: center;
-        }
-        #friendsMenu {
-            display: none;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        #inviteCount {
-            margin-top: 10px;
-            font-size: 1.2rem;
-        }
     </style>
+    <script>
+        // Mock function to simulate getting Telegram username
+        function getTelegramUsername() {
+            return "User123"; // Replace with real integration later
+        }
+
+        function startGame() {
+            const startScreen = document.getElementById("startScreen");
+            const timeSection = document.getElementById("timeSection");
+
+            startScreen.style.display = "none";
+            timeSection.style.display = "flex";
+
+            generateClocks();
+        }
+
+        function backToStart() {
+            const startScreen = document.getElementById("startScreen");
+            const timeSection = document.getElementById("timeSection");
+
+            timeSection.style.display = "none";
+            startScreen.style.display = "flex";
+        }
+
+        function generateClocks() {
+            const timeSection = document.getElementById("timeSection");
+
+            for (let i = 0; i < 10; i++) {
+                const clock = document.createElement("div");
+                clock.className = "clock";
+                clock.style.left = Math.random() * 100 + "%";
+                clock.style.animationDelay = Math.random() * 5 + "s";
+                timeSection.appendChild(clock);
+
+                setTimeout(() => clock.remove(), 10000); // Remove clock after it falls
+            }
+        }
+
+        function init() {
+            const username = getTelegramUsername();
+            const greetingMessage = document.getElementById("greetingMessage");
+            greetingMessage.textContent = `Привет, ${username}!`;
+        }
+
+        document.addEventListener("DOMContentLoaded", init);
+    </script>
 </head>
 <body>
     <div id="startScreen">
@@ -216,14 +228,9 @@
         <button id="backButton" onclick="backToStart()">⬅ Назад</button>
         <div id="timeTitle">TIME</div>
         <div id="tokenBalance">Баланс токенов Time: <span id="balance">0</span></div>
-        <button id="playButton" onclick="playGame()">Играть</button>
         <div class="additionalButtonContainer">
             <button class="additionalButton" onclick="alert('Раздел Квесты еще не разработан')">Квесты</button>
-            <button class="additionalButton" id="friendsButton">Друзья</button>
         </div>
-        <div id="friendsMenu">
-            <button class="additionalButton" id="copyLinkButton">Скопировать ссылку</button>
-            <button class="additionalButton" id="inviteFriendButton">Пригласить друга</button>
-            <div id="inviteCount">Приглашенные друзья: <span id="inviteCountValue">0</span></div>
-            <button class="additionalButton" onclick="hideFriendsMenu()">⬅ Назад</button>
-        </
+    </div>
+</body>
+</html>
