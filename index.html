@@ -167,6 +167,18 @@
             background-color: white;
             color: #ff4081;
         }
+        #referralSection {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        #referralLink {
+            font-size: 1.2rem;
+            color: #ff4081;
+            word-break: break-all;
+        }
     </style>
     <script>
         // Mock function to simulate getting Telegram username
@@ -206,10 +218,22 @@
             }
         }
 
+        function copyReferralLink() {
+            const referralLink = document.getElementById("referralLink").textContent;
+            navigator.clipboard.writeText(referralLink).then(() => {
+                alert("Ссылка скопирована в буфер обмена!");
+            }).catch(err => {
+                console.error("Ошибка копирования ссылки", err);
+            });
+        }
+
         function init() {
             const username = getTelegramUsername();
             const greetingMessage = document.getElementById("greetingMessage");
+            const referralLink = document.getElementById("referralLink");
+
             greetingMessage.textContent = `Привет, ${username}!`;
+            referralLink.textContent = `https://timebot.app/referral?user=${username}`;
         }
 
         document.addEventListener("DOMContentLoaded", init);
@@ -222,14 +246,12 @@
             <p id="greetingMessage">Привет!</p>
             <p id="appStatus">В разработке V. 0.0.2</p>
         </div>
-        <button id="startButton" onclick="startGame()">Начать</button>
-    </div>
-    <div id="timeSection">
-        <button id="backButton" onclick="backToStart()">⬅ Назад</button>
-        <div id="timeTitle">TIME</div>
-        <div id="tokenBalance">Баланс токенов Time: <span id="balance">0</span></div>
-        <div class="additionalButtonContainer">
-            <button class="additionalButton" onclick="alert('Раздел Квесты еще не разработан')">Квесты</button>
+                <button class="additionalButton" id="referralButton" onclick="showReferralLink()">Реферальная ссылка</button>
+            </div>
+            <div id="referralSection" style="display: none; text-align: center; margin-top: 20px;">
+                <p id="referralText"></p>
+                <button class="additionalButton" onclick="copyReferralLink()">Скопировать ссылку</button>
+            </div>
         </div>
     </div>
 </body>
